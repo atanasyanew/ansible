@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "hosts": "ini",
+        "**/*.yml": "ansible"
+    },
+    "files.defaultLanguage": "ansible",
+    "terminal.integrated.defaultProfile.windows": "Ubuntu (WSL)",
+    "cSpell.words": [
+        "gcode",
+        "octopis",
+        "octoprint",
+        "oprint",
+        "timelapse",
+        "wslconfig"
+    ]
+}

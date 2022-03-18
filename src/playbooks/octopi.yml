@@ -1,0 +1,42 @@
+- hosts: octopis
+
+  tasks:
+
+    - name: OctoPi apt get update and upgrade # Name/description of the task
+      become: true # Become super user
+      register: debug_update # Register the result to a variable
+      apt: # Module name
+        update_cache: yes # Run the equivalent of apt-get update
+        upgrade: yes # If yes or safe, performs an aptitude safe-upgrade.
+
+    - name: OctoPi install 3rd party plugins
+      pip:
+        name: # The packages to install, either name or url
+          - https://github.com/Kragrathea/OctoPrint-PrettyGCode/archive/master.zip # Adds a 3D GCode visualizer tab in Octoprint.
+          - https://github.com/bradcfisher/OctoPrint-ExcludeRegionPlugin/archive/master.zip # Adds the ability to prevent printing within rectangular or circular regions of the currently active gcode file.
+          - https://github.com/Salandora/OctoPrint-FileManager/archive/master.zip # A simple file manager
+          - https://github.com/j7126/OctoPrint-Dashboard/archive/master.zip # Adds a dashboard tab that displays the most relevant info regarding the state of the printer and any on-going print job.
+          - https://github.com/OllisGit/OctoPrint-DisplayLayerProgress/releases/latest/download/master.zip # Displays stats on Browser TabTitle, NavBar and Printer Display
+          - https://github.com/AlexVerrico/octoprint-stats/archive/master.zip # This plugin is designed to show statistics of your printer and estimate power usage in kWh.
+          - https://github.com/jneilliii/OctoPrint-TabOrder/archive/master.zip # Simple plugin to allow the ordering of tabs within OctoPrint.
+          - https://github.com/FormerLurker/ArcWelderPlugin/archive/master.zip # To make curved prints smoother
+          - https://github.com/Andy-ch/OctoPrint-HeaterTimeout/archive/master.zip # Automatically shut off heaters if no print has been started.
+          
+          # - https://github.com/FormerLurker/Octolapse/archive/master.zip # Create a stabilized timelapse of your 3D prints.
+          # - https://github.com/The-EG/OctoPrint-CameraSettings/archive/main.zip # Interactive camera settings via v4l2-ctl
+          # - https://plugins.octoprint.org/plugins/telegram/ # A plugin to send and react on messages before, during and after a print via Telegram Messenger.
+          # - https://github.com/BillyBlaze/OctoPrint-TouchUI/archive/master.zip # A touch friendly interface for Mobile and TFT touch modules
+          # - https://github.com/birkbjo/OctoPrint-Themeify/archive/master.zip # Beautiful themes for octoprint
+          # - https://github.com/OctoPrint/OctoPrint-FirmwareUpdater/archive/master.zip # Remote firmware updates give you added convenience and reduced hassle.
+        executable: ~/oprint/bin/pip # The explicit executable or pathname for the pip executable, if different from the Ansible Python interpreter
+        state: latest # The state of packages
+
+    - name: OctoPi systemctl restart service
+      become: true
+      systemd:
+        name: octoprint # The service name
+        state: restarted
+
+    # - debug: msg="{{ debug_update.stdout }}" # Debug registered variables/outputs
+    # - debug:  var=debug_update.stdout_lines # Using stdout_lines, for multiline output
+    # - debug: msg="{{ debug_update.stderr }}"

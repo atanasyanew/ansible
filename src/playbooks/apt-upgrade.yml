@@ -1,0 +1,9 @@
+- name: Update servers
+  hosts: all
+  become: true # Become root user, sudo
+
+  tasks:
+    - name: apt update and upgrade packages
+      apt:
+        update_cache: yes # Run the equivalent of apt-get update
+        upgrade: yes
