@@ -1,4 +1,6 @@
-- hosts: octopis
+- name: Provision Octopi's instances # Name/description of the playbook
+  hosts: octopis
+  gather_facts: false # We do not use facts, ignore them in order to improve execution time
 
   tasks:
 
@@ -10,6 +12,7 @@
         upgrade: yes # If yes or safe, performs an aptitude safe-upgrade.
 
     - name: OctoPi install 3rd party plugins
+      register: debug_plugins # Register the result to a variable
       pip:
         name: # The packages to install, either name or url
           - https://github.com/Kragrathea/OctoPrint-PrettyGCode/archive/master.zip # Adds a 3D GCode visualizer tab in Octoprint.
@@ -29,6 +32,7 @@
           # - https://github.com/birkbjo/OctoPrint-Themeify/archive/master.zip # Beautiful themes for octoprint
           # - https://github.com/OctoPrint/OctoPrint-FirmwareUpdater/archive/master.zip # Remote firmware updates give you added convenience and reduced hassle.
         executable: ~/oprint/bin/pip # The explicit executable or pathname for the pip executable, if different from the Ansible Python interpreter
+        extra_args: --disable-pip-version-check --no-cache-dir
         state: latest # The state of packages
 
     - name: OctoPi systemctl restart service
@@ -37,6 +41,6 @@
         name: octoprint # The service name
         state: restarted
 
-    # - debug: msg="{{ debug_update.stdout }}" # Debug registered variables/outputs
-    # - debug:  var=debug_update.stdout_lines # Using stdout_lines, for multiline output
+    - debug: msg="{{ debug_update.stdout }}" # Debug registered variables/outputs
+    - debug: var=debug_plugins.stdout_lines # Using stdout_lines, for multiline output
     # - debug: msg="{{ debug_update.stderr }}"

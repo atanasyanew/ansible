@@ -1,0 +1,25 @@
+- name: Bootstrap, initial server configuration
+  hosts: all
+  become: true
+  gather_facts: true
+  pre_tasks:
+
+  tasks:
+
+    - name: Install updates (CentOS)
+      tags: always
+      dnf:
+        update_only: yes
+        update_cache: yes
+      when: ansible_distribution == "CentOS"
+
+    - name: Install update (Ubuntu/Debian)
+      tags: always
+      apt:
+        upgrade: dist
+        update_cache: yes
+      when: 
+        - ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
+
+# TODO:https://www.learnlinux.tv/getting-started-with-ansible-13-managing-users/
+# https://docs.ansible.com/ansible/latest/collections/ansible/posix/authorized_key_module.html
